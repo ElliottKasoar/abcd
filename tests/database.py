@@ -53,7 +53,7 @@ class OpenSearch(unittest.TestCase):
     def setUpClass(cls):
         logging.basicConfig(level=logging.INFO)
         url = "opensearch://admin:admin@localhost:9200"
-        abcd = ABCD.from_url(url, index_name="test_index")
+        abcd = ABCD.from_url(url, index_name="test_index", analyse_schema=False)
         cls.abcd = abcd
 
     @classmethod
