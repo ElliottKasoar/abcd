@@ -62,6 +62,7 @@ class ParsingExtras(unittest.TestCase):
             ("true_value", {"true_value": True}),
             ("true_value_long = true", {"true_value_long": True}),
             ("false_value = F", {"false_value": False}),
+            ("false_value_colon: F", {"false_value_colon": False}),
         )
 
         for string, expected in s:
@@ -76,6 +77,7 @@ class ParsingExtras(unittest.TestCase):
             ("floating=1.1", {"floating": 1.1}),
             ("scientific_float=1.2e7", {"scientific_float": 1.2e7}),
             ("scientific_float_2=5e-6", {"scientific_float_2": 5e-6}),
+            ("floating_colon: 3.14", {"floating_colon": 3.14}),
         )
 
         for string, expected in s:
@@ -100,6 +102,7 @@ class ParsingExtras(unittest.TestCase):
                 "array_bool_commas=[T, T, F, T]",
                 {"array_bool_commas": [True, True, False, True]},
             ),
+            ("int_array_colon: {4 2}", {"int_array_colon": [4, 2]}),
         )
 
         for string, expected in s:
@@ -138,6 +141,18 @@ class ParsingExtras(unittest.TestCase):
 
         out = self.parser.parse(composite_string)
         self.assertEqual(out, composite_expected)
+
+    def test_colon_key_value_pairs(self):
+        """Key value pairs separated by colons"""
+        s = (
+            ('colon_string:"astring"', {'colon_string': 'astring'}),
+            ('colon_string_spaces : "astring"', {'colon_string_spaces': 'astring'}),
+        )
+
+        for string, expected in s:
+            with self.subTest(string=string):
+                out = self.parser.parse(string)
+                self.assertEqual(out, expected)
 
     @unittest.skip("known issues / future features ")
     def test_missing(self):
