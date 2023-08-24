@@ -12,7 +12,7 @@ Main features:
 - Configurations that consist of atom positions, elements, forces, and various metadata are stored as a dictionary by a MongoDB backend.
 - There is no predefined schema, any combination of keys are allowed for all configurations.
 - Two modes: "discovery" and "download". Both use filter-type queries, but in "discovery" mode, summary statistics of the configurations that pass the filter are reported. In "download" mode, the matching configurations are downloaded and exported to a file.
-- The "discovery" mode can be used to learn what keys exist in the set of configurations that have passed the current quiery filter. The user can use this to refine the query.
+- The "discovery" mode can be used to learn what keys exist in the set of configurations that have passed the current query filter. The user can use this to refine the query.
 - Complex queries on dictionary key-value pairs are allowed, and their logical combinations.
 
 ## Installation
@@ -24,7 +24,9 @@ $ pip install git+https://github.com/libAtoms/abcd.git
 
 ## Setup
 
-If you have an already running mongo server, or install your own, they you are ready to go. Alternatively,
+### MongoDB
+
+If you have an already running MongoDB server, or install your own, then you are ready to go. Alternatively,
 
 ```
 docker run -d --rm --name abcd-mongodb -v <path-on-your-machine-to-store-database>:/data/db -p 27017:27017 mongo
@@ -49,7 +51,22 @@ The above login command will place create an `~/.abcd` file with the following c
 {"url": "mongodb://localhost"}
 ```
 
-# Remote access
+### OpenSearch
+If you have an already running OpenSearch server, or install your own, then you are ready to go. Alternatively,
+
+```
+sudo sysctl -w vm.max_map_count=262144
+docker run -d --rm --name abcd-opensearch -v <path-on-your-machine-to-store-database>:/data/db -p 9200:9200 -it opensearchproject/opensearch:latest
+```
+
+will download and install a docker and run a database in it.
+
+To connect to an OpenSearch database that is already running, use
+```
+abcd login opensearch://username:password@localhost
+```
+
+## Remote access
 
 You can set up an `abcd` user on your machine where the database is running, and then access it remotely for discovering data. Make sure you have the `~/.abcd` file created for this user, then put this in the `.ssh/authorized_keys` file (substituting your public key for the last part):
 ```
@@ -61,12 +78,12 @@ Then you'll be able to access the database remotely using, e.g.
 ssh abcd@your.machine summary
 ```
 
-# GUI through a browser + visualisation
+## GUI through a browser + visualisation
 
 The database has a simple GUI, coupled with a visualiser. Data for now needs to be uploaded on the command line, but query can be done through the browsers. Instructions below (they include running `abcd` from a docker too, but of course you can run it outside the docker as well. )
 
 
-#### Usage in docker
+## Usage in docker
 Currently a manual uploaded image is available, that was built on 7/2/2020 by Tamas K. Stenczel.
 To access it:
 1. pull the image
