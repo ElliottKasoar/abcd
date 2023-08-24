@@ -43,7 +43,7 @@ class Hasher:
 
         else:
             raise ValueError(
-                "The {} type cannot be hashed! (Value: {})", format(type(value), value)
+                f"The {type(value)} type cannot be hashed! (Value: {value})"
             )
 
     def __call__(self):
