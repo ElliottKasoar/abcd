@@ -1,6 +1,7 @@
 import unittest
 from tests.parsers import ParsingQueries, ParsingExtras
 from tests.database import Mongo, OpenSearch
+from tests.properties import PropertiesTests
 
 import logging
 
