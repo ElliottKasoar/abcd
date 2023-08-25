@@ -145,8 +145,8 @@ class ParsingExtras(unittest.TestCase):
     def test_colon_key_value_pairs(self):
         """Key value pairs separated by colons"""
         s = (
-            ('colon_string:"astring"', {'colon_string': 'astring'}),
-            ('colon_string_spaces : "astring"', {'colon_string_spaces': 'astring'}),
+            ("colon_string:'astring'", {"colon_string": "astring"}),
+            ("colon_string_spaces : 'astring'", {"colon_string_spaces": "astring"}),
         )
 
         for string, expected in s:
