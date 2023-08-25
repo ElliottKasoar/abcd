@@ -145,13 +145,8 @@ class ParsingExtras(unittest.TestCase):
     def test_colon_key_value_pairs(self):
         """Key value pairs separated by colons"""
         s = (
-<<<<<<< HEAD
             ("colon_string:'astring'", {"colon_string": "astring"}),
             ("colon_string_spaces : 'astring'", {"colon_string_spaces": "astring"}),
-=======
-            ('colon_string:"astring"', {"colon_string": "astring"}),
-            ('colon_string_spaces : "astring"', {"colon_string_spaces": "astring"}),
->>>>>>> c962bfe (Apply black formatting)
         )
 
         for string, expected in s:
@@ -173,11 +168,7 @@ class ParsingExtras(unittest.TestCase):
             'a3x3_array="1 4 7 2 5 8 3 6 9" '  # fortran ordering
             'Lattice="  4.3  0.0 0.0 0.0  3.3 0.0 0.0 0.0  7.0 " '  # spaces in array
             'comma_separated="7, 4, -1"',
-<<<<<<< HEAD
-            'array_boolean_2=" T, F, T " ' 'not_array="1.2 3.4 text"',  # leading spaces
-=======
             'array_boolean_2=" T, F, T " not_array="1.2 3.4 text"',  # leading spaces
->>>>>>> c962bfe (Apply black formatting)
             "not_bool_array=[T F S]",
         )
         print(s)
