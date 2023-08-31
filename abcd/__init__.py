@@ -58,7 +58,7 @@ class ABCD:
 
             from abcd.backends.atoms_opensearch import OpenSearchDatabase
 
-            return OpenSearchDatabase(db_name=db, **conn_settings, **kwargs)
+            return OpenSearchDatabase(db=db, **conn_settings, **kwargs)
         if r.scheme == "http" or r.scheme == "https":
             raise NotImplementedError("http not yet supported! soon...")
         if r.scheme == "ssh":
