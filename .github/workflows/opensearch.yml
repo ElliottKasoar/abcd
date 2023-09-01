@@ -7,6 +7,7 @@ jobs:
     name: Start OpenSearch
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         opensearch: ['1.0.1', '2.0.1', 'latest']
         security-enabled: ["true", "false"]
