@@ -188,7 +188,7 @@ class ParsingQueries(unittest.TestCase):
             ('string = "some string"', {}),
             ('regexp ~ ".*H"', {}),
         )
-        for string, expected in s:
+        for string, _ in s:
             with self.subTest(string=string):
                 self.parser.parse(string)
 
@@ -200,7 +200,7 @@ class ParsingQueries(unittest.TestCase):
             ("aa and bb > 23 and bb > 23 and bb > 23 ", {}),
             ("aa and bb > 23.54 or 22 in cc and dd", {}),
         )
-        for string, expected in s:
+        for string, _ in s:
             with self.subTest(string=string):
                 self.parser.parse(string)
 
@@ -213,7 +213,7 @@ class ParsingQueries(unittest.TestCase):
             ("all(aa) > 3", {}),
             ("any(aa) > 3", {}),
         )
-        for string, expected in s:
+        for string, _ in s:
             with self.subTest(string=string):
                 self.parser.parse(string)
 
