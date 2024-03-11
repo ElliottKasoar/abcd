@@ -44,4 +44,5 @@ jobs:
           poetry run python -m unittest -v tests
         env:
           port: 9250
+          opensearch-version: ${{ matrix.opensearch }}
           security_enabled: ${{ matrix.security-enabled }}
