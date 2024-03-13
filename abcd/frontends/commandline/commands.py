@@ -260,6 +260,12 @@ def server(*, abcd_url, url, api_only, **kwargs):
     app.run(host=o.hostname, port=o.port)
 
 
+@init_config
+@init_db
+def refresh(*, db, **kwargs):
+    db.refresh()
+
+
 class Formater:
     def title(self, title):
         print("", title, "=" * len(title), sep=os.linesep)
