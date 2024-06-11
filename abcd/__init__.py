@@ -45,7 +45,8 @@ class ABCD:
             from abcd.backends.atoms_pymongo import MongoDatabase
 
             return MongoDatabase(db_name=db, host=r.geturl(), uri_mode=True, **kwargs)
-        if r.scheme == "opensearch":
+        r.scheme = ConnectionType[r.scheme]
+        if r.scheme is ConnectionType.opensearch:
             conn_settings = {
                 "host": r.hostname,
                 "port": r.port,
