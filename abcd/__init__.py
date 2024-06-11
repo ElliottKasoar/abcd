@@ -24,7 +24,7 @@ class ABCD:
         r = parse.urlparse(url)
         logger.info(r)
 
-        if r.scheme == "mongodb":
+        if ConnectionType[r.scheme] is ConnectionType.mongodb:
             conn_settings = {
                 "host": r.hostname,
                 "port": r.port,
@@ -45,8 +45,8 @@ class ABCD:
             from abcd.backends.atoms_pymongo import MongoDatabase
 
             return MongoDatabase(db_name=db, host=r.geturl(), uri_mode=True, **kwargs)
-        r.scheme = ConnectionType[r.scheme]
-        if r.scheme is ConnectionType.opensearch:
+
+        if ConnectionType[r.scheme] is ConnectionType.opensearch:
             conn_settings = {
                 "host": r.hostname,
                 "port": r.port,
