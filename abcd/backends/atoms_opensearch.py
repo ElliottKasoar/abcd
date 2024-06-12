@@ -453,7 +453,10 @@ class OpenSearchDatabase(AbstractABCD):
         if isinstance(file, str):
             file = Path(file)
 
-        extra_info = dict(map(extras.parser.parse, extra_infos))
+        extra_info = {}
+        if extra_infos:
+            for info in extra_infos:
+                extra_info.update(extras.parser.parse(info))
 
         extra_info["filename"] = str(file)
 
