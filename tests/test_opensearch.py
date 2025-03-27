@@ -23,29 +23,26 @@ class TestOpenSearch:
     @pytest.fixture(autouse=True)
     def abcd(self):
         """Set up OpenSearch database connection."""
-        security_enabled = os.getenv("security_enabled") == "true"
-        self.port = int(os.environ["port"])
-        self.host = "localhost"
-        if os.environ["opensearch-version"] == "latest":
-            credential = "admin:myStrongPassword123!"
-        else:
-            credential = "admin:admin"
-
         logging.basicConfig(level=logging.INFO)
 
-        url = f"opensearch://{credential}@{self.host}:{self.port}"
+        self.port = int(os.environ.get("port", 9200))
+        self.host = "localhost"
+        self.credential = "admin:myStrongPassword_123"
+        self.security_enabled = os.getenv("security_enabled") == "true"
+
+        url = f"opensearch://{self.credential}@{self.host}:{self.port}"
         try:
             abcd_opensearch = ABCD.from_url(
                 url,
                 index_name="test_index",
-                use_ssl=security_enabled,
+                use_ssl=self.security_enabled,
             )
         except (ConnectionError, ConnectionResetError):
             sleep(10)
             abcd_opensearch = ABCD.from_url(
                 url,
                 index_name="test_index",
-                use_ssl=security_enabled,
+                use_ssl=self.security_enabled,
             )
 
         assert isinstance(abcd_opensearch, OpenSearchDatabase)
@@ -60,12 +57,12 @@ class TestOpenSearch:
             Si       0.00000000       0.00000000       0.00000000
             """
         )
-
         atoms = read(xyz, format="extxyz")
         assert isinstance(atoms, Atoms)
         atoms.set_cell([1, 1, 1])
         abcd.push(atoms)
         abcd.refresh()
+        return abcd
 
     def test_info(self, abcd):
         """Test printing database info."""
@@ -221,7 +218,7 @@ class TestOpenSearch:
         atoms_1 = read(xyz_1, format="extxyz")
         assert isinstance(atoms_1, Atoms)
         atoms_1.set_cell([1, 1, 1])
-        abcd.push(atoms_1, store_calc=False)
+        abcd.push(atoms_1, store_calc=True)
 
         xyz_2 = StringIO(
             """2
@@ -234,7 +231,7 @@ class TestOpenSearch:
         atoms_2 = read(xyz_2, format="extxyz")
         assert isinstance(atoms_2, Atoms)
         atoms_2.set_cell([1, 1, 1])
-        abcd.push(atoms_2, store_calc=False)
+        abcd.push(atoms_2, store_calc=True)
 
         abcd.refresh()
         prop = abcd.property("prop_1")
@@ -253,7 +250,7 @@ class TestOpenSearch:
         self.push_data(abcd)
         props = abcd.properties()
         expected_props = {
-            "info": ["_vtk_test", "cell", "formula", "n_atoms", "pbc", "s", "volume"],
+            "info": ["_vtk_test", "cell", "formula", "n_atoms", "pbc", "s"],
             "derived": [
                 "elements",
                 "hash",
@@ -442,7 +439,6 @@ class TestOpenSearch:
                     "cell",
                     "pbc",
                     "formula",
-                    "volume",
                 ],
                 "derived_keys": [
                     "elements",
@@ -452,6 +448,7 @@ class TestOpenSearch:
                     "volume",
                     "hash_structure",
                     "hash",
+                    "volume",
                 ],
                 "arrays_keys": ["numbers", "positions"],
                 "results_keys": [],

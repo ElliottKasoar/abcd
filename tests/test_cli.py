@@ -20,18 +20,15 @@ class TestCli:
     @pytest.fixture(autouse=True)
     def abcd(self):
         """Set up OpenSearch database connection and login with CLI."""
-        security_enabled = os.getenv("security_enabled") == "true"
-        port = int(os.environ["port"])
-        host = "localhost"
-        if os.environ["opensearch-version"] == "latest":
-            credential = "admin:myStrongPassword123!"
-        else:
-            credential = "admin:admin"
-
         logging.basicConfig(level=logging.INFO)
 
-        url = f"opensearch://{credential}@{host}:{port}"
-        if not security_enabled:
+        self.port = int(os.environ.get("port", 9200))
+        self.host = "localhost"
+        self.credential = "admin:myStrongPassword_123"
+        self.security_enabled = os.getenv("security_enabled") == "true"
+
+        url = f"opensearch://{self.credential}@{self.host}:{self.port}"
+        if not self.security_enabled:
             url += " --disable_ssl"
         try:
             subprocess.run(f"abcd login {url}", shell=True, check=True)
@@ -39,10 +36,8 @@ class TestCli:
             sleep(10)
             subprocess.run(f"abcd login {url}", shell=True, check=True)
 
-    def test_summary(self, abcd):
-        """
-        Test summary output of uploaded data file.
-        """
+    def test_summary(self):
+        """Test summary output of uploaded data file."""
         data_file = DATA_PATH / "example.xyz"
 
         subprocess.run(
@@ -56,10 +51,8 @@ class TestCli:
         assert "Total number of configurations" in summary.stdout
         subprocess.run("abcd delete -q 'test_data' -y", shell=True)
 
-    def test_query(self, abcd):
-        """
-        Test lucene-style query.
-        """
+    def test_query(self):
+        """Test lucene-style query."""
         data_file_1 = DATA_PATH / "example.xyz"
         data_file_2 = DATA_PATH / "example_2.xyz"
 
@@ -89,18 +82,16 @@ class TestCli:
         assert "3" in summary.stdout and "2" not in summary.stdout
         subprocess.run("abcd delete -q 'test_data' -y", shell=True)
 
-    def test_range_query(self, abcd):
-        """
-        Test lucene-style ranged query.
-        """
+    def test_range_query(self):
+        """Test lucene-style ranged query."""
         data_file_1 = DATA_PATH / "example.xyz"
         data_file_2 = DATA_PATH / "example_2.xyz"
 
         subprocess.run(
-            f"abcd upload {data_file_1} -i -e 'test_data'", shell=True, check=True
+            f"abcd upload {data_file_1} -e 'test_data'", shell=True, check=True
         )
         subprocess.run(
-            f"abcd upload {data_file_2} -i -e 'test_data'", shell=True, check=True
+            f"abcd upload {data_file_2} -e 'test_data'", shell=True, check=True
         )
         subprocess.run("abcd refresh", shell=True, check=True)
 

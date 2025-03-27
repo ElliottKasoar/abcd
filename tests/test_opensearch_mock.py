@@ -18,25 +18,22 @@ class TestOpenSearchMock:
     @openmock
     def abcd(self):
         """Set up database connection."""
-
-        if "port" in os.environ:
-            port = int(os.environ["port"])
-        else:
-            port = 9200
-        host = "localhost"
-        security_enabled = os.getenv("security_enabled") == "true"
-        if os.environ["opensearch-version"] == "latest":
-            credential = "admin:myStrongPassword123!"
-        else:
-            credential = "admin:admin"
-
         logging.basicConfig(level=logging.INFO)
 
-        url = f"opensearch://{credential}@{host}:{port}"
+        self.port = int(os.environ.get("port", 9200))
+        self.host = "localhost"
+        self.credential = "admin:myStrongPassword_123"
+        if os.getenv("GITHUB_ACTIONS") == "true":
+            self.security_enabled = os.getenv("security_enabled") == "true"
+        else:
+            # Otherwise assume local OpenSearch is enabled
+            self.security_enabled = True
+
+        url = f"opensearch://{self.credential}@{self.host}:{self.port}"
         opensearch_abcd = ABCD.from_url(
             url,
             index_name="test_index",
-            use_ssl=security_enabled,
+            use_ssl=self.security_enabled,
         )
         assert isinstance(opensearch_abcd, OpenSearchDatabase)
         return opensearch_abcd
@@ -95,9 +92,7 @@ class TestOpenSearchMock:
         assert atoms_2 != result
 
     def test_bulk(self, abcd):
-        """
-        Test pushing atoms object to database together.
-        """
+        """Test pushing atoms object to database together."""
         abcd.destroy()
         abcd.create()
         xyz_1 = StringIO(
@@ -138,9 +133,7 @@ class TestOpenSearchMock:
         assert atoms_2 == result_2
 
     def test_count(self, abcd):
-        """
-        Test counting the number of documents in the database.
-        """
+        """Test counting the number of documents in the database."""
         abcd.destroy()
         abcd.create()
         xyz = StringIO(

@@ -20,7 +20,7 @@ inputs:
   opensearch-initial-admin-password:
     description: 'The password for the user admin in your cluster'
     required: false
-    default: 'myStrongPassword123!'
+    default: 'myStrongPassword_123'
 
 runs:
   using: 'docker'
