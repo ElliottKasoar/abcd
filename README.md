@@ -144,7 +144,7 @@ To access it:
     docker pull stenczelt/projection-abcd:latest
     ```
 
-2. create a docker network, which enables the containers to communicate with each other and the outside world as well 
+2. create a docker network, which enables the containers to communicate with each other and the outside world as well
     ```sh
     docker network create --driver bridge abcd-network
     ```

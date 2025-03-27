@@ -3,8 +3,8 @@ import os
 
 import numpy as np
 
-from abcd.frontends.commandline.decorators import check_remote, init_config, init_db
 from abcd.backends.atoms_opensearch import OpenSearchDatabase
+from abcd.frontends.commandline.decorators import check_remote, init_config, init_db
 
 logger = logging.getLogger(__name__)
 

@@ -1,9 +1,11 @@
 from __future__ import annotations
-import pandas as pd
-import numpy as np
-from typing import Union
+
 from pathlib import Path
+from typing import Union
+
 import chardet
+import numpy as np
+import pandas as pd
 
 
 class Properties:

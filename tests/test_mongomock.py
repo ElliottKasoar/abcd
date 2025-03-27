@@ -1,9 +1,8 @@
 from io import StringIO
 import logging
-import unittest
 
-from ase.io import read
 from ase.atoms import Atoms
+from ase.io import read
 import mongomock
 import pytest
 

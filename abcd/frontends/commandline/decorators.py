@@ -1,5 +1,6 @@
-import logging
 import functools
+import logging
+
 from abcd import ABCD
 from abcd.frontends.commandline.config import Config
 

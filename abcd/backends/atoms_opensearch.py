@@ -1,20 +1,20 @@
 from __future__ import annotations
 
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from datetime import datetime
-from typing import Iterable, Optional, Union
 import logging
 from os import linesep
 from pathlib import Path
+from typing import Optional, Union
 
 from ase import Atoms
 from ase.io import iread
 from opensearchpy import (
-    OpenSearch,
-    helpers,
     AuthenticationException,
     ConnectionTimeout,
+    OpenSearch,
     RequestError,
+    helpers,
 )
 
 from abcd.backends import utils
@@ -23,7 +23,6 @@ import abcd.errors
 from abcd.model import AbstractModel
 from abcd.parsers import extras
 from abcd.queryset import AbstractQuerySet
-
 
 logger = logging.getLogger(__name__)
 
@@ -768,18 +767,16 @@ class OpenSearchDatabase(AbstractABCD):
 
         if category == "arrays":
             if isinstance(data[0], list):
-                return "array({}, N x {})".format(
-                    map_types[type(data[0][0])], len(data[0])
-                )
-            return "vector({}, N)".format(map_types[type(data[0])])
+                return f"array({map_types[type(data[0][0])]}, N x {len(data[0])})"
+            return f"vector({map_types[type(data[0])]}, N)"
 
         if isinstance(data, list):
             if isinstance(data[0], list):
                 if isinstance(data[0][0], list):
                     return "list(list(...)"
-                return "array({})".format(map_types[type(data[0][0])])
-            return "vector({})".format(map_types[type(data[0])])
-        return "scalar({})".format(map_types[type(data)])
+                return f"array({map_types[type(data[0][0])]})"
+            return f"vector({map_types[type(data[0])]})"
+        return f"scalar({map_types[type(data)]})"
 
     def count_properties(self, query: Optional[Union[dict, str]] = None) -> dict:
         """
@@ -984,11 +981,7 @@ class OpenSearchDatabase(AbstractABCD):
         else:
             host, port = None, None
 
-        return (
-            f"{self.__class__.__name__}("
-            f"url={host}:{port}, "
-            f"index={self.index_name}) "
-        )
+        return f"{self.__class__.__name__}(url={host}:{port}, index={self.index_name}) "
 
     def _repr_html_(self):
         """
@@ -1008,7 +1001,7 @@ class OpenSearchDatabase(AbstractABCD):
             [
                 "{:=^50}".format(" ABCD OpenSearch "),
                 "{:>10}: {}".format("type", "opensearch"),
-                linesep.join("{:>10}: {}".format(k, v) for k, v in self.info().items()),
+                linesep.join(f"{k:>10}: {v}" for k, v in self.info().items()),
             ]
         )
 

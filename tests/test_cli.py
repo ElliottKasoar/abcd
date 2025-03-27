@@ -6,7 +6,6 @@ from time import sleep
 
 import pytest
 
-
 DATA_PATH = Path(__file__).parent / "data"
 
 NOT_GTHUB_ACTIONS = True
@@ -49,13 +48,13 @@ class TestCli:
         subprocess.run(
             f"abcd upload {data_file} -i -e 'test_data'", shell=True, check=True
         )
-        subprocess.run(f"abcd refresh", shell=True, check=True)
+        subprocess.run("abcd refresh", shell=True, check=True)
 
         summary = subprocess.run(
             "abcd summary", shell=True, check=True, capture_output=True, text=True
         )
         assert "Total number of configurations" in summary.stdout
-        subprocess.run(f"abcd delete -q 'test_data' -y", shell=True)
+        subprocess.run("abcd delete -q 'test_data' -y", shell=True)
 
     def test_query(self, abcd):
         """
@@ -70,7 +69,7 @@ class TestCli:
         subprocess.run(
             f"abcd upload {data_file_2} -i -e 'test_data'", shell=True, check=True
         )
-        subprocess.run(f"abcd refresh", shell=True, check=True)
+        subprocess.run("abcd refresh", shell=True, check=True)
 
         summary = subprocess.run(
             "abcd show -p n_atoms -q 'n_atoms : 2'",
@@ -88,7 +87,7 @@ class TestCli:
             text=True,
         )
         assert "3" in summary.stdout and "2" not in summary.stdout
-        subprocess.run(f"abcd delete -q 'test_data' -y", shell=True)
+        subprocess.run("abcd delete -q 'test_data' -y", shell=True)
 
     def test_range_query(self, abcd):
         """
@@ -103,7 +102,7 @@ class TestCli:
         subprocess.run(
             f"abcd upload {data_file_2} -i -e 'test_data'", shell=True, check=True
         )
-        subprocess.run(f"abcd refresh", shell=True, check=True)
+        subprocess.run("abcd refresh", shell=True, check=True)
 
         summary = subprocess.run(
             "abcd summary -p energy -q 'energy:[-100 TO -99]'",
@@ -122,4 +121,4 @@ class TestCli:
             text=True,
         )
         assert "Total number of configurations: 2" in summary.stdout
-        subprocess.run(f"abcd delete -q 'test_data' -y", shell=True)
+        subprocess.run("abcd delete -q 'test_data' -y", shell=True)
