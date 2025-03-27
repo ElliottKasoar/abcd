@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Union
 
 import chardet
 import numpy as np
@@ -36,11 +35,11 @@ class Properties:
 
     def __init__(
         self,
-        data_file: Union[str, Path],
+        data_file: str | Path,
         store_struct_file: bool = False,
-        struct_file_template: Union[str, None] = None,
-        struct_name_label: Union[str, None] = None,
-        units: Union[dict, None] = None,
+        struct_file_template: str | None = None,
+        struct_name_label: str | None = None,
+        units: dict | None = None,
         infer_units: bool = False,
         encoding: str = "utf-8",
     ):
