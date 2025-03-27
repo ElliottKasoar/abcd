@@ -430,7 +430,7 @@ class OpenSearchDatabase(AbstractABCD):
     def upload(
         self,
         file: Path,
-        extra_infos: Iterable | dict = (),
+        extra_infos: Iterable | dict | None = (),
         store_calc: bool = True,
     ):
         """
@@ -440,7 +440,7 @@ class OpenSearchDatabase(AbstractABCD):
         ----------
         file: Path
             Path to file to be uploaded
-        extra_infos: Union[Iterable, dict]
+        extra_infos: Iterable | dict | None
             Extra information to store in the document with the atoms data.
             Default is `()`.
         store_calc: bool, optional
@@ -452,8 +452,9 @@ class OpenSearchDatabase(AbstractABCD):
             file = Path(file)
 
         extra_info = {}
-        for info in extra_infos:
-            extra_info.update(extras.parser.parse(info))
+        if extra_infos:
+            for info in extra_infos:
+                extra_info.update(extras.parser.parse(info))
 
         extra_info["filename"] = str(file)
 
@@ -762,7 +763,10 @@ class OpenSearchDatabase(AbstractABCD):
             body={"size": 1, "query": {"exists": {"field": prop}}},
         )
 
-        data = atoms["hits"]["hits"][0]["_source"][prop]
+        try:
+            data = atoms["hits"]["hits"][0]["_source"][prop]
+        except IndexError:
+            return "null"
 
         if category == "arrays":
             if isinstance(data[0], list):
