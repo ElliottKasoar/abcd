@@ -84,12 +84,12 @@ class Properties:
         self.encoding = encoding
         try:
             self.df = pd.read_csv(self.data_file, encoding=self.encoding)
-        except UnicodeDecodeError:
+        except UnicodeDecodeError as err:
             detected = chardet.detect(Path(self.data_file).read_bytes())
             raise ValueError(
                 f"File cannot be decoded using encoding: {self.encoding}."
                 f" Detected encoding: {detected}."
-            )
+            ) from err
         except pd.errors.ParserError:
             self.df = pd.read_excel(self.data_file, header=0)
 
@@ -154,11 +154,11 @@ class Properties:
         for i in range(len(self.df)):
             try:
                 struct_name = self.df.iloc[i][self.struct_name_label]
-            except KeyError:
+            except KeyError as err:
                 raise ValueError(
                     f"{self.struct_name_label} is not a valid column in "
                     "the data loaded."
-                )
+                ) from err
             struct_file = self.get_struct_file(struct_name)
             self.struct_files.append(struct_file)
 

@@ -56,7 +56,7 @@ class TestOpenSearchMock:
         abcd.destroy()
         abcd.create()
         assert abcd.client.indices.exists("test_index") is True
-        abcd.client.indices.exists("fake_index") is False
+        assert abcd.client.indices.exists("fake_index") is False
 
     def test_push(self, abcd):
         """

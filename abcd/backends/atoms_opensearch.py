@@ -940,9 +940,7 @@ class OpenSearchDatabase(AbstractABCD):
 
         self.client.update_by_query(index=self.index_name, body=body)
 
-    def hist(
-        self, name: str, query: dict | str | None = None, **kwargs
-    ) -> dict | None:
+    def hist(self, name: str, query: dict | str | None = None, **kwargs) -> dict | None:
         """
         Calculate histogram statistics for a property from all matching documents.
 

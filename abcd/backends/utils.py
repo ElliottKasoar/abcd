@@ -19,18 +19,18 @@ def histogram(name, data, **kwargs):
             print("Mixed type error of the %s property!", name)
             return None
 
-        if ptype == float:
+        if isinstance(data[0], float):
             bins = kwargs.get("bins", 10)
             return _hist_float(name, data, bins)
 
-        if ptype == int:
+        if isinstance(data[0], int):
             bins = kwargs.get("bins", 10)
             return _hist_int(name, data, bins)
 
-        if ptype == str:
+        if isinstance(data[0], str):
             return _hist_str(name, data, **kwargs)
 
-        if ptype == datetime:
+        if isinstance(data[0], datetime):
             bins = kwargs.get("bins", 10)
             return _hist_date(name, data, bins)
 
