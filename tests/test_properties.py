@@ -17,16 +17,12 @@ class TestProperties:
         return Properties(data_file)
 
     def test_dataframe(self, property):
-        """
-        Test data correctly stored in pandas DataFrame.
-        """
+        """Test data correctly stored in pandas DataFrame."""
         assert isinstance(property.df, DataFrame)
         assert len(property.df) == 3
 
     def test_specify_units(self, property):
-        """
-        Test units can be specified manually, if they match existing fields.
-        """
+        """Test units can be specified manually, if they match existing fields."""
         input_units_1 = {"Integers": "items", "Floating": "seconds"}
         properties_1 = Properties(
             data_file=property.data_file,
@@ -42,9 +38,7 @@ class TestProperties:
             )
 
     def test_infer_units(self, property):
-        """
-        Test units can be inferred from field names.
-        """
+        """Test units can be inferred from field names."""
         properties = Properties(
             data_file=property.data_file,
             infer_units=True,
@@ -63,9 +57,7 @@ class TestProperties:
         assert list(properties.df.columns.values) == expected_fields
 
     def test_struct_file(self, property):
-        """
-        Test structure file names can be inferred from a field.
-        """
+        """Test structure file names can be inferred from a field."""
         struct_file_template = "test_{struct_name}_file.txt"
         struct_name_label = "Text"
         properties_1 = Properties(
@@ -102,9 +94,7 @@ class TestProperties:
             )
 
     def test_to_list(self, property):
-        """
-        Test dataframe can be converted into a list of properties.
-        """
+        """Test dataframe can be converted into a list of properties."""
         assert len(property.to_list()) == 3
         assert isinstance(property.to_list(), list)
         assert isinstance(property.to_list()[0], dict)
@@ -120,9 +110,7 @@ class TestProperties:
         assert property.to_list()[0] == expected_property
 
     def test_missing_data(self, property):
-        """
-        Test missing data is not included in properties.
-        """
+        """Test missing data is not included in properties."""
         expected_property = {
             "Text": "test",
             "Integers": 2,
@@ -134,9 +122,7 @@ class TestProperties:
         assert property.to_list()[1] == expected_property
 
     def test_to_list_units(self, property):
-        """
-        Test units are included in properties when converting to a list.
-        """
+        """Test units are included in properties when converting to a list."""
         properties_1 = Properties(
             data_file=property.data_file,
             infer_units=True,
