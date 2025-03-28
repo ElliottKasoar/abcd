@@ -891,8 +891,8 @@ class OpenSearchDatabase(AbstractABCD):
         query = self.parser(query)
         logger.info("rename: query=%s, old=%s, new=%s", query, name, new_name)
 
-        script_txt = "if (!ctx._source.containsKey(params.new_name)) { "
-        script_txt += (
+        script_txt = (
+            "if (!ctx._source.containsKey(params.new_name)) { "
             f"ctx._source.{new_name} = ctx._source.{name};"
             " ctx._source.remove(params.name);"
             " for (int i=0; i<ctx._source.derived.info_keys.length; i++) {"
@@ -925,11 +925,13 @@ class OpenSearchDatabase(AbstractABCD):
         query = self.parser(query)
         logger.info("delete: query=%s, porperty=%s", name, query)
 
-        script_txt = f"if (ctx._source.containsKey('{name}')) {{ "
-        script_txt += "ctx._source.remove(params.name);"
-        script_txt += "for (int i=0; i<ctx._source.derived.info_keys.length; i++) {"
-        script_txt += "if (ctx._source.derived.info_keys[i] == params.name) { "
-        script_txt += "ctx._source.derived.info_keys.remove(i);}}}"
+        script_txt = (
+            f"if (ctx._source.containsKey('{name}')) {{ "
+            "ctx._source.remove(params.name);"
+            "for (int i=0; i<ctx._source.derived.info_keys.length; i++) {"
+            "if (ctx._source.derived.info_keys[i] == params.name) { "
+            "ctx._source.derived.info_keys.remove(i);}}}"
+        )
 
         body = {
             "script": {
