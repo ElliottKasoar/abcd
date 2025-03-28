@@ -560,9 +560,8 @@ class OpenSearchDatabase(AbstractABCD):
         dict
             Dictionary of lists of values for the specified properties.
         """
-        props = {}
         hits = [
-            dict(hit["_source"].items())
+            hit["_source"].copy()
             for hit in helpers.scan(
                 self.client,
                 index=self.index_name,
@@ -572,9 +571,7 @@ class OpenSearchDatabase(AbstractABCD):
             )
             if "_source" in hit and all(name in hit["_source"] for name in names)
         ]
-        for name in names:
-            props[name] = [hit[name] for hit in hits]
-        return props
+        return {name: [hit[name] for hit in hits] for name in names}
 
     def property(
         self,
@@ -663,14 +660,15 @@ class OpenSearchDatabase(AbstractABCD):
         """
         query = self.parser(query)
         logger.info("parsed query: %s", query)
+        prop_name = format(name)
 
         body = {
             "size": 0,
             "query": query,
             "aggs": {
-                format(name): {
+                prop_name: {
                     "terms": {
-                        "field": format(name),
+                        "field": prop_name,
                         "size": 10000,  # Use composite for all results?
                     },
                 },
@@ -680,7 +678,7 @@ class OpenSearchDatabase(AbstractABCD):
         prop = {}
 
         for val in self.client.search(index=self.index_name, body=body)["aggregations"][
-            format(name)
+            prop_name
         ]["buckets"]:
             prop[val["key"]] = val["doc_count"]
 
