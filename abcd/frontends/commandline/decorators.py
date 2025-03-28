@@ -24,12 +24,10 @@ def init_db(func):
         use_ssl = config.get("use_ssl", None)
 
         if url is None:
-            print("Please use abcd login first!")
-            exit(1)
+            raise ConnectionError("Please use abcd login first!")
 
         if use_ssl is None:
-            print("use_ssl has not been saved. Please login again")
-            exit(1)
+            raise ConnectionError("use_ssl has not been saved. Please login again")
 
         db = ABCD.from_url(url=url, use_ssl=use_ssl)
 
@@ -52,8 +50,9 @@ def check_remote(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if kwargs.pop("remote"):
-            print("In read only mode, you can't modify the data in the database")
-            exit(1)
+            raise PermissionError(
+                "In read only mode, you can't modify the data in the database"
+            )
 
         func(*args, **kwargs)
 
