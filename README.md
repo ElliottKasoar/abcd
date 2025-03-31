@@ -95,26 +95,26 @@ The above login command will place create an `~/.abcd` file with the following c
 ```
 
 ### OpenSearch
-If you have an already running OpenSearch server, or install your own, then you are ready to go. Alternatively,
+If you have an already running OpenSearch server, or installed your own, then you are ready to go. Alternatively,
 
 ```sh
 sudo swapoff -a # optional
 sudo sysctl -w vm.swappiness=1 # optional
 sudo sysctl -w fs.file-max=262144 # optional
 sudo sysctl -w vm.max_map_count=262144
-docker run -d --rm --name abcd-opensearch -v <path-on-your-machine-to-store-database>:/data/db -p 9200:9200  --env discovery.type=single-node -it opensearchproject/opensearch:latest
+docker run -d --name abcd-opensearch -v <path-on-your-machine-to-store-database>:/data/db -p 9200:9200 -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=<PASSWORD>" -it opensearchproject/opensearch:latest
 ```
 
 will download and install an OpenSearch image and run it. The connection can be tested with:
 
 ```sh
-curl -vvv -s --insecure -u admin:admin --fail https://localhost:9200
+curl -vvv -s --insecure -u admin:<PASSWORD> --fail https://localhost:9200
 ```
 
 To connect to an OpenSearch database that is already running, use
 
 ```sh
-abcd login opensearch://username:password@localhost
+abcd login opensearch://<USER>:<PASSWORD>@localhost
 ```
 
 ## Remote access
